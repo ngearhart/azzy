@@ -2,6 +2,6 @@
     "configuration": "flash=8388608_0,freq=200,opt=Small,os=none,profile=Disabled,rtti=Disabled,stackprotect=Disabled,exceptions=Disabled,dbgport=Disabled,dbglvl=None,usbstack=picosdk,ipbtstack=ipv4only,boot2=boot2_w25q080_2_padded_checksum,uploadmethod=default",
     "board": "rp2040:rp2040:adafruit_feather_scorpio",
     "port": "COM8",
-    "sketch": "strandtest.ino",
+    "sketch": "azzy.ino",
     "output": "../.arduino-cache"
 }
