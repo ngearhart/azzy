@@ -1,6 +1,9 @@
 
 #include <Adafruit_NeoPXL8.h>
 
+// Smaller speed factor = faster pulses
+#define SPEED_FACTOR 4
+#define PULSE_LENGTH 256
 #define NUM_LEDS 96
 // For the Feather RP2040 SCORPIO, use this list:
 int8_t pins[8] = {16, 17, 18, 19, 20, 21, 22, 23};
@@ -72,7 +75,7 @@ void setup()
   // this point (via non-HDR strandtest) that your code and hardware
   // are confirmed in sync, making these tests redundant.
 
-  Serial.begin(9600);
+  pulse();
 }
 
 // ANIMATION LOOP (similar to "regular" NeoPXL8) ---------------------------
@@ -82,36 +85,42 @@ void setup()
 // here (packed into a 32-bit value) to show how existing NeoPixel or
 // NeoPXL8 code can carry over directly. The library will expand these
 // to 16 bits behind the scenes.
-uint32_t start = 0;
-#define SPEED_FACTOR 16
-#define PULSE_LENGTH 256
+uint32_t timeStart = 0;
+uint32_t timeEnd = 0;
+
+void pulse() {
+  uint32_t now = millis(); // Get time once at start of each frame
+  if (timeEnd > now) {
+    // If we are past time end, then reset everything
+    timeStart = now;
+  }
+  // Otherwise, just reset time end
+  timeEnd = now + PULSE_LENGTH * SPEED_FACTOR;
+}
+
 void loop()
 {
   uint32_t now = millis(); // Get time once at start of each frame
 
-  if (start == 0) {
-    start = now;
-  }
-
-  if (now - start < PULSE_LENGTH * SPEED_FACTOR) {
-    uint16_t frame = (now - start) / SPEED_FACTOR;
-    Serial.println(frame);
+  if (now - timeStart < timeEnd) {
+    uint32_t frame = (now - timeStart) / SPEED_FACTOR;
+    uint32_t endFrame = (timeEnd - now) / SPEED_FACTOR;
     uint8_t r = 0;
     for (int p = 0; p < NUM_LEDS; p++)
     {
       uint16_t hue = (frame + p) * PULSE_LENGTH;
 
-      uint8_t value = sin_wave[(uint8_t)(frame + p)];
+      uint8_t value = 255;// = sin_wave[(uint8_t)(frame + p)];
 
       if (frame + p < NUM_LEDS) {
-        value = 0;
-      } else if (frame + p > PULSE_LENGTH) {
-        value = 0;
+        value = 0; // Before the pulse
+      } else if ((frame - endFrame) + p > PULSE_LENGTH) {
+        value = 0; // After the pulse
       }
       leds.setPixelColor(r * NUM_LEDS + p, leds.ColorHSV(hue, 255, value));
     }
     leds.show();
-  } //else if (now - start > 20)
+  }
 }
 
 // Pixel strand colors, same code as non-HDR strandtest:
