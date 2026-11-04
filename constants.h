@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __CONSTANTS_H__
+#define __CONSTANTS_H__
 
 
 // Feather RP2040 SCORPIO pinout
@@ -9,4 +10,7 @@
 #define LEFT_SIDE_LED_PIN 18
 #define RIGHT_SIDE_LED_PIN 19
 
+// 20 seems maybe good - needs tuning
+#define ACC_TRIGGER_THRESHOLD 40
 
+#endif

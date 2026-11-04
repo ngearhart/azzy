@@ -110,8 +110,36 @@ void updateLeds()
 
 /// @brief Run LED pulse constantly
 void startLedTest() {
-    pulseLeds(LedPosition::LEFT_ARM);
-    pulseLeds(LedPosition::RIGHT_ARM);
+    pulseLeds(LedPosition::LED_LEFT_ARM);
+    pulseLeds(LedPosition::LED_RIGHT_ARM);
     timeEnd[0] = UINT32_MAX;
     timeEnd[1] = UINT32_MAX;
+}
+
+/// @brief Copy of pulseLed without param for callback passing
+void pulseLedsLeftArm() {
+    pulseLeds(LedPosition::LED_LEFT_ARM);
+}
+
+/// @brief Copy of pulseLed without param for callback passing
+void pulseLedsRightArm() {
+    pulseLeds(LedPosition::LED_RIGHT_ARM);
+}
+
+/// @brief Copy of pulseLed without param for callback passing
+void pulseLedsLeftSide() {
+    pulseLeds(LedPosition::LED_LEFT_SIDE);
+}
+
+/// @brief Copy of pulseLed without param for callback passing
+void pulseLedsRightSide() {
+    pulseLeds(LedPosition::LED_RIGHT_SIDE);
+}
+
+/// @brief Pulse all LED strips
+void pulseAllLeds() {
+    pulseLeds(LedPosition::LED_LEFT_ARM);
+    pulseLeds(LedPosition::LED_RIGHT_ARM);
+    pulseLeds(LedPosition::LED_LEFT_SIDE);
+    pulseLeds(LedPosition::LED_RIGHT_SIDE);
 }

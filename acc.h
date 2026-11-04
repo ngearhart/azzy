@@ -1,6 +1,9 @@
-#pragma once
+#ifndef __ACC_H__
+#define __ACC_H__
 
-#define ACC_TRIGGER_THRESHOLD 20
+#include "mux.h"
 
 void setupAccelerometers();
-void readAccelerometers(int delayMs, void (*callback)(void));
+void readAccelerometers(enum MuxI2CAddress address, int delayMs, void (*callback)(void));
+
+#endif
