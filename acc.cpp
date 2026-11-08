@@ -14,13 +14,24 @@ Adafruit_LIS3DH imuSensor[4] = { Adafruit_LIS3DH(), Adafruit_LIS3DH(), Adafruit_
 
 void setupAccelerometer(enum MuxI2CAddress address)
 {
+  Serial.print("Starting IMU at ");
+  Serial.println(address);
   muxSelect(address);
-  if (!imuSensor[address].begin(0x18))
-  { // change this to 0x19 for alternative i2c address
-    Serial.print("Couldnt start IMU at ");
-    Serial.println(address);
+  bool started = false;
+  for (uint8_t i = 0; i < 10; i++) {
+    if (imuSensor[address].begin(0x18)) {
+      started = true;
+      break;
+    } else
+    { // change this to 0x19 for alternative i2c address
+      Serial.print("Couldnt start IMU (trying again) at ");
+      Serial.println(address);
+      delay(200);
+    }
+  } 
+  if (!started) {
     while (1)
-      yield();
+    yield();
   }
   Serial.print("LIS3DH IMU initialized at ");
   Serial.println(address);

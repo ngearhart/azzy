@@ -1,6 +1,8 @@
 #include "acc.h"
 #include "leds.h"
 #include "mux.h"
+#include "rotary.h"
+#include "haptic.h"
 
 void setup(void) {
   Serial.begin(9600);
@@ -8,8 +10,10 @@ void setup(void) {
   Serial.println("Setup startin");
   setupAccelerometers();
   setupLeds();
+  setupRotary();
+  setupHaptic();
   pulseAllLeds();
-  // startLedTest();
+  startLedTest();
 
   Serial.println("Setup complete");
 }
@@ -22,9 +26,10 @@ int delayMs = 10;
 uint8_t sleepCounter = 0;
 void loop() {
   if (sleepCounter == 0) {
-    readAccelerometers(MuxI2CAddress::LEFT_ARM, delayMs * 20, pulseLedsLeftArm);
-    readAccelerometers(MuxI2CAddress::RIGHT_ARM, delayMs * 20, pulseLedsRightArm);
-    readAccelerometers(MuxI2CAddress::CENTER, delayMs * 20, pulseAllLeds);
+    // readAccelerometers(MuxI2CAddress::LEFT_ARM, delayMs * 20, pulseLedsLeftArm);
+    // readAccelerometers(MuxI2CAddress::RIGHT_ARM, delayMs * 20, pulseLedsRightArm);
+    // readAccelerometers(MuxI2CAddress::CENTER, delayMs * 20, pulseAllLeds);
+    readRotary();
   }
 
   sleepCounter++;

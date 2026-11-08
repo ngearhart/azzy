@@ -17,7 +17,12 @@ int8_t LED_PINS[8] = {
 // 65535 / 2 => roughly 4 watts per meter
 // So for the whole cosplay - 4 meters * max brightness power = 16 watts
 // 16 watts at 5V is 3.2A - need at least 3.2A peak current, probably 5A to be safe
-#define LED_BRIGHTNESS 65535 / 2
+#define TRUE_LED_BRIGHTNESS 65535 / 2
+#define LED_LOW_BRIGHTNESS_CLAMP 32
+
+/// Note that we do not truly use the native brightness to control the LEDs
+/// Instead, we set the native brightness to max, and use this for the HSV value
+uint8_t currentLedBrightness = 128;
 
 // Here's the global constructor as explained near the start:
 Adafruit_NeoPXL8HDR leds(NUM_LEDS_PER_STRIP, LED_PINS, NEO_RGB + NEO_KHZ800);
@@ -53,7 +58,42 @@ void setupLeds()
     // (2.6 in this example) is set at the same time as global brightness.
     // Notice the brightness uses a 16-bit value (0-65535), not 8-bit
     // (0-255) as in NeoPixel and NeoPXL8:
-    leds.setBrightness(LED_BRIGHTNESS, 2.6); // 1/8 max duty cycle, 2.6 gamma factor
+    leds.setBrightness(TRUE_LED_BRIGHTNESS, 2.6); // 1/8 max duty cycle, 2.6 gamma factor
+}
+
+/// @brief Set LED brightness from 0-255
+/// @param brightness The desired brightness
+void setLedBrightness(uint8_t brightness) {
+    // leds.setBrightness(brightness * 128, 2.6);
+    if (brightness < LED_LOW_BRIGHTNESS_CLAMP) {
+        currentLedBrightness = 0;
+    } else {
+        currentLedBrightness = brightness;
+    }
+}
+
+/// @brief Modify LED brightness by a change amount signed int
+/// @param change The amount to change by, in (-255, 255)
+/// @return True if the change succeeded, False if out of bounds
+bool modifyLedBrightness(int16_t change) {
+    Serial.print("Modifying currentLedBrightness by ");
+    Serial.print(change);
+    Serial.print(" - currentBrightness=");
+    Serial.print(currentLedBrightness);
+    if (change + currentLedBrightness > UINT8_MAX || currentLedBrightness + change < 0) {
+        Serial.println(" out of bounds");
+        setLedBrightness(change + currentLedBrightness > 128 ? UINT8_MAX : 0);
+        return false;
+    }
+    Serial.print(" done - new brightness=");
+    // Cover the edge case of the LEDS being fully off
+    if (change > 0 && currentLedBrightness + change < LED_LOW_BRIGHTNESS_CLAMP) {
+        setLedBrightness(LED_LOW_BRIGHTNESS_CLAMP);
+    } else {
+        setLedBrightness((uint8_t) currentLedBrightness + change);
+    }
+    Serial.println(currentLedBrightness);
+    return true;
 }
 
 void pulseLeds(enum LedPosition position)
@@ -84,7 +124,7 @@ void updateLeds(enum LedPosition position) {
         {
             uint16_t hue = (frame + p) * PULSE_LENGTH;
 
-            uint8_t value = 255;
+            uint8_t value = currentLedBrightness;
 
             if (frame + p < NUM_LEDS_PER_STRIP)
             {

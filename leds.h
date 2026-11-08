@@ -13,6 +13,8 @@ enum LedPosition {
 
 void ledLoop1();
 void setupLeds();
+void setLedBrightness(uint8_t brightness);
+bool modifyLedBrightness(int16_t change);
 void pulseLeds(enum LedPosition position);
 void updateLeds();
 void startLedTest();

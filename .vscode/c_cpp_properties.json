@@ -31,6 +31,8 @@
                 "C:\\Users\\noahl\\OneDrive\\Documents\\Arduino\\libraries\\Adafruit_Unified_Sensor",
                 "C:\\Users\\noahl\\OneDrive\\Documents\\Arduino\\libraries\\Adafruit_NeoPixel",
                 "C:\\Users\\noahl\\OneDrive\\Documents\\Arduino\\libraries\\Adafruit_NeoPXL8",
+                "C:\\Users\\noahl\\OneDrive\\Documents\\Arduino\\libraries\\Adafruit_seesaw_Library",
+                "C:\\Users\\noahl\\OneDrive\\Documents\\Arduino\\libraries\\Adafruit_DRV2605_Library",
                 "C:\\Users\\noahl\\OneDrive\\Documents\\Arduino\\libraries\\TinyWireM",
                 "C:\\Users\\noahl\\AppData\\Local\\Arduino15\\packages\\rp2040\\tools\\pqt-gcc\\5.0.0-9576866\\arm-none-eabi\\include\\c++\\16.1.0",
                 "C:\\Users\\noahl\\AppData\\Local\\Arduino15\\packages\\rp2040\\tools\\pqt-gcc\\5.0.0-9576866\\arm-none-eabi\\include\\c++\\16.1.0\\arm-none-eabi\\thumb",
